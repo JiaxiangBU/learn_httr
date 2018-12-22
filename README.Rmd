@@ -11,4 +11,5 @@ knitr::opts_chunk$set(
 )
 ```
 
+1. [intro](intro.md)
 1. [NEWS](NEWS.md)
