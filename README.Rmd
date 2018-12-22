@@ -11,3 +11,4 @@ knitr::opts_chunk$set(
 )
 ```
 
+1. [NEWS](NEWS.md)

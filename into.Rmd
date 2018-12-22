@@ -1,0 +1,183 @@
+---
+output: github_document
+---
+
+https://httr.r-lib.org/articles/quickstart.html
+
+```{r}
+library(httr)
+r <- GET("http://httpbin.org/get")
+```
+
+```{r}
+r
+```
+
+会告诉什多大`Size: 325 B`
+
+```{r}
+headers(r)
+```
+
+`GET()` is used by your browser when requesting a page, and `POST()` is (usually) used when submitting a form to a server. `PUT()`, `PATCH()` and `DELETE()` are used most often by web APIs.
+
+# status
+
+>
+The data sent back from the server consists of three parts: the status line, the headers and the body.
+>
+The status code is a three digit number that summarises whether or not the request was successful (as defined by the server that you’re talking to). 
+>
+A successful request always returns a status of 200.
+>
+Common errors are 404 (file not found) and 403 (permission denied).
+
+```{r}
+http_status(r)
+```
+
+```{r}
+status_code(r)
+```
+
+# text
+
+```{r}
+content(r, "text")
+```
+
+```{r}
+content(r, "text", encoding = stringi::stri_enc_detect(content(r, "raw")))
+```
+
+`stringi::stri_enc_detect(content(r, "raw"))`自动查询 Encoding
+
+List化
+
+```{r}
+content(r, "parsed")
+```
+
+```{r}
+library(tidyverse)
+content(r, "parsed") %>% 
+    str()
+```
+
+# headers
+
+```{r}
+headers(r)
+```
+
+>
+http headers are case insensitive
+
+```{r}
+headers(r)$date
+headers(r)$DATE
+```
+
+# cookies
+
+```{r}
+r <- GET("http://httpbin.org/cookies/set", query = list(a = 1))
+cookies(r)
+```
+
+```{r}
+r <- GET("http://httpbin.org/cookies/set", query = list(b = 1))
+cookies(r)
+```
+
+```{r}
+r <- GET("http://httpbin.org/cookies/set", query = list(c = 1))
+cookies(r)
+```
+
+这样产生三个参数。
+
+the request 和 the response 的区别
+
+类似与 responsse
+
+```{r}
+r <- GET("http://httpbin.org/get", 
+  query = list(key1 = "value1", key2 = "value2")
+)
+content(r)$args
+```
+
+```{r}
+r <- GET("http://httpbin.org/get", 
+  query = list(key1 = "value 1", "key 2" = "value2", key2 = NULL))
+content(r)$args
+```
+
+`NULL`的 key-value pairs 会自动去掉。
+
+```{r}
+r <- GET("http://httpbin.org/get", add_headers(Name = "Hadley"))
+str(content(r)$headers)
+```
+
+注意，
+`Name = "Hadley"`并不存在于`http://httpbin.org/get`的headers中。
+
+>
+Cookies are simple key-value pairs like the query string, but they persist across multiple requests in a session (because they’re sent back and forth every time). 
+
+```{r}
+r <- GET("http://httpbin.org/cookies", set_cookies("MeWant" = "cookies"))
+content(r)$cookies
+```
+
+>
+Note that this response includes the `a` and `b` cookies that were added by the server earlier.
+
+```{r}
+r <- POST("http://httpbin.org/post", body = list(a = 1, b = 2, c = 3))
+r
+```
+
+```{r}
+url <- "http://httpbin.org/post"
+body <- list(a = 1, b = 2, c = 3)
+
+# Form encoded
+r <- POST(url, body = body, encode = "form")
+# Multipart encoded
+r <- POST(url, body = body, encode = "multipart")
+# JSON encoded
+r <- POST(url, body = body, encode = "json")
+```
+
+
+```{r eval=F}
+POST(url, body = body, encode = "multipart", verbose()) # the default
+POST(url, body = body, encode = "form", verbose())
+POST(url, body = body, encode = "json", verbose())
+```
+
+开始讲 POST 请求
+以上`verbose()`是动态的，所以只能在console完成。
+
+```{r}
+POST(url, body = upload_file("mypath.txt"))
+POST(url, body = list(x = upload_file("mypath.txt")))
+```
+
+`"data": "This is a upload txt."`
+
+```
+  "files": {
+    "x": "This is a upload txt."
+  }, 
+```
+
+这个是安装的内容。
+
+不是特别清楚，POST请求，add headers 和 data 等的区别。
+直接看案例。
+
+这是看爬虫方面内容，最bug的地方。
