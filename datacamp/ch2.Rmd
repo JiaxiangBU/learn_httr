@@ -1,0 +1,199 @@
+---
+output: github_document
+---
+
+# GET/POST
+
+当没有API时，就需要GET/POST请求了。
+
+>
+If an API client doesn't exist, it's up to you to communicate directly with the API. But don't worry, the package `httr` makes this really straightforward. In this chapter you'll learn how to make web requests from R, how to examine the responses you get back and some best practices for doing this in a responsible way.
+
+1. GET like download，从网址获得一些东西
+1. POST like upload，一般出现在 authentication process to a server
+
+## GET
+
+http://httpbin.org/get
+用于测试http
+
+```{r}
+# Load the httr package
+library(httr)
+
+# Make a GET request to http://httpbin.org/get
+get_result <- GET('http://httpbin.org/get')
+
+# Print it to inspect it
+get_result
+```
+
+## POST
+
+>
+As a result of their use for uploading things, `POST()` accepts not just a `url` but also a `body` argument containing whatever you want to give to the server.
+
+因此这是POST请求需要写body的原因。
+
+```{r}
+# Load the httr package
+library(httr)
+
+# Make a POST request to http://httpbin.org/post with the body "this is a test"
+post_result <- POST(url = "http://httpbin.org/post",body = "this is a test")
+
+# Print it to inspect it
+post_result
+```
+
+## content
+
+```{r eval=F}
+url <- "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia.org/all-access/all-agents/Hadley_Wickham/daily/20170101/20170102"
+# Make a GET request to url and save the results
+pageview_response <- GET(url)
+
+# Call content() to retrieve the data the server sent back
+pageview_data <- content(pageview_response)
+
+# Examine the results with str()
+str(pageview_data)
+```
+
+很慢，跑不动。
+
+# status code
+
+[wiki](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+
+1. 1xx (Informational): The request was received, continuing process
+1. 2xx (<mark>Successful</mark>): The request was successfully received, understood, and accepted
+1. 3xx (<mark>Redirection</mark>): Further action needs to be taken in order to complete the request
+1. 4xx (Client Error): The request contains bad syntax or cannot be fulfilled
+1. 5xx (Server Error): The server failed to fulfill an apparently valid request
+
+`http_error()`可以用来查验。
+
+```{r}
+fake_url <- "www.sogou.com/fakepagethatdoesnotexist"
+
+# Make the GET request
+request_result <- GET(fake_url)
+
+# Check request_result
+if(http_error(request_result)){
+	warning("The request failed")
+} else {
+	content(request_result)
+}
+```
+
+>
+Error handling is really important for writing robust code, and it looks like you've got a good handle on it.
+
+# query
+
+API query, two forms
+
+1. The first is directory-based, where values are separated by `/` marks within the URL. 
+1. The second is parameter-based, where all the values exist at the end of the URL and take the form of `key=value`.
+
+<input type="checkbox" id="checkbox1" class="styled">感觉可以调用百度搜索的API
+
+```{r}
+# Construct a directory-based API URL to `http://swapi.co/api`,
+# looking for person `1` in `people`
+directory_url <- paste("http://swapi.co/api", "people", "1", sep = "/")
+
+# Make a GET call with it
+result <- GET(directory_url)
+```
+
+<input type="checkbox" id="checkbox1" class="styled">配上for循环，可以对某些网站进行批量下载。
+
+    http://fakeurl.com/foo.php?country=spain&food=goulash
+    
+    GET("fakeurl.com/api.php", query = list(fruit = "peaches", day = "thursday"))
+
+    https://httpbin.org/get?nationality=americans&country=antigua
+    
+```{r}
+# Create list with nationality and country elements
+query_params <- list(nationality = "americans", 
+    country = "antigua")
+    
+# Make parameter-based call to httpbin, with query_params
+parameter_response <- GET("https://httpbin.org/get", query = query_params)
+
+# Print parameter_response
+parameter_response
+```
+
+`args`存储我们之前写的参数。
+
+# user agent
+
+主要填写个人信息、邮箱，方便 server 联系你，当你出现一些bug，对方好一起讨论。
+
+参考[DataCamp](https://campus.datacamp.com/courses/working-with-web-data-in-r/using-httr-to-interact-with-apis-directly?ex=11)，一般可以提供
+
+1. My email address;
+1. A URL for the project the code is a part of, if it's got a URL.
+
+```{r eval=F}
+GET("http://url.goes.here/", user_agent("somefakeemail@domain.com http://project.website"))
+```
+
+```{r}
+# Do not change the url
+url <- "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Aaron_Halfaker/daily/2015100100/2015103100"
+
+# Add the email address and the test sentence inside user_agent()
+server_response <- GET(url, user_agent("alex.lijiaxiang@foxmail.com this is a test"))
+```
+
+```{r}
+server_response
+```
+
+# Rate limiting
+
+一秒一条无所谓。
+使用`Sys.sleep()`
+
+
+```{r}
+# Construct a vector of 2 URLs
+urls <- c("http://fakeurl.com/api/1.0/","http://fakeurl.com/api/2.0/")
+
+for(url in urls){
+    # Send a GET request to url
+    result <- GET(url)
+    # Delay for 5 seconds between requests
+    Sys.sleep(1)
+}
+```
+
+```{r}
+result
+```
+
+```{r}
+get_pageviews <- function(article_title){
+  url <- paste(
+    "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents", 
+    article_title, 
+    "daily/2015100100/2015103100", 
+    sep = "/"
+  )   
+  response <- GET(url, user_agent("my@email.com this is a test")) 
+  # Is there an HTTP error?
+  if(http_error(response)){ 
+    # Throw an R error
+    stop("the request failed") 
+  }
+  # Return the response's content
+  content(response)
+}
+```
+

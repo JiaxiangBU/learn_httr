@@ -1,0 +1,9 @@
+---
+output: github_document
+---
+
+Working with Web Data in R
+https://www.datacamp.com//courses/working-with-web-data-in-r
+Charlotte Wickham
+
+会教GET 和 POST 请求

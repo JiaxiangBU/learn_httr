@@ -1,0 +1,56 @@
+---
+output: github_document
+---
+
+# download
+
+`download.file`比read方便，还可以完成批量下载。
+
+```{r}
+csv_url <- "http://s3.amazonaws.com/assets.datacamp.com/production/course_1561/datasets/chickwts.csv"
+```
+
+```{r}
+# Download the file with download.file()
+download.file(url = csv_url, destfile = "../data/feed_data.csv")
+
+# Read it in with read.csv()
+csv_data <- read.csv("../data/feed_data.csv")
+```
+
+```{r}
+head(csv_data)
+```
+
+# Application Programming Interfaces
+
+1. Find them by googling 'CRAN [name of website]'
+1. pageviews - acts as a client to Wikipedia's API of pageview data.
+
+```{r}
+# Load pageviews
+library(pageviews)
+
+# Get the pageviews for "Hadley Wickham"
+hadley_pageviews <- article_pageviews(project = "en.wikipedia", "Hadley Wickham")
+
+# Examine the resulting object
+str(hadley_pageviews)
+```
+
+>
+lets you get all sorts of interesting information about word usage in published works.
+>
+`birdnik` a package that wraps the Wordnik API
+>
+https://www.wordnik.com/
+
+```{r}
+api_key <- "d8ed66f01da01b0c6a0070d7c1503801993a39c126fbc3382"
+```
+
+```{r}
+library(birdnik)
+word_frequency(api_key, "chocolate")
+```
+
