@@ -253,6 +253,116 @@ xml_find_all(movies_xml, xpath = "/movies/movie/title")
 `@`提取attr。
 或者使用`xml_attrs()`
 
+nodeset - a list of nodes
 
-书签
-https://campus.datacamp.com/courses/working-with-web-data-in-r/handling-json-and-xml?ex=11
+`xml_text()` (or `xml_double()` or `xml_integer()`)
+
+```{r eval=F}
+# Find all nodes using XPATH "/api/query/pages/page/revisions/rev"
+xml_find_all(rev_xml, "/api/query/pages/page/revisions/rev")
+
+# Find all rev nodes anywhere in document
+rev_nodes <- xml_find_all(rev_xml, "//rev")
+
+# Use xml_text() to get text from rev_nodes
+xml_text(rev_nodes)
+```
+
+<input type="checkbox" id="checkbox1" class="styled">可以再Stack Overflow上回复问题了
+
+1. `xml_attrs()` takes a nodeset and returns all of the attributes for every node in the nodeset. 
+1.`xml_attr()` takes a nodeset and an additional argument attr to extract a single named argument from each node in the nodeset.
+
+终于知道这两个函数的意义了。
+
+>
+`xml_find_first()` in the sample code. It works just like `xml_find_all()` but it only extracts the first node it finds.
+
+```{r}
+# All rev nodes
+rev_nodes <- xml_find_all(rev_xml, "//rev")
+
+# The first rev node
+first_rev_node <- xml_find_first(rev_xml, "//rev")
+
+# Find all attributes with xml_attrs()
+xml_attrs(first_rev_node)
+
+# Find user attribute with xml_attr()
+xml_attr(first_rev_node, "user")
+
+# Find user attribute for all rev nodes
+xml_attr(rev_nodes, "user")
+
+# Find anon attribute for all rev nodes
+xml_attr(rev_nodes, "anon")
+```
+
+<input type="checkbox" id="checkbox1" class="styled">之后这个例子肯定要换
+
+>
+if a node didn't have the anon attribute `xml_attr()` returned an `NA`
+
+```
+> # All rev nodes
+> rev_nodes <- xml_find_all(rev_xml, "//rev")
+> 
+> # The first rev node
+> first_rev_node <- xml_find_first(rev_xml, "//rev")
+> 
+> # Find all attributes with xml_attrs()
+> xml_attrs(first_rev_node)
+                  user                   anon              timestamp 
+      "214.28.226.251"                     "" "2015-01-14T17:12:45Z" 
+               comment          contentformat           contentmodel 
+                    ""          "text/x-wiki"             "wikitext" 
+                 space 
+            "preserve"
+> 
+> # Find user attribute with xml_attr()
+> xml_attr(first_rev_node, "user")
+[1] "214.28.226.251"
+> 
+> # Find user attribute for all rev nodes
+> xml_attr(rev_nodes, "user")
+[1] "214.28.226.251" "73.183.151.193" "FeanorStar7"    "KasparBot"     
+[5] "Spkal"
+> 
+> # Find anon attribute for all rev nodes
+> xml_attr(rev_nodes, "anon")
+[1] "" "" NA NA NA
+```
+
+总结
+
+```{r}
+get_revision_history <- function(article_title){
+  # Get raw revision response
+  rev_resp <- rev_history(article_title, format = "xml")
+  
+  # Turn the content() of rev_resp into XML
+  rev_xml <- read_xml(content(rev_resp, "text"))
+  
+  # Find revision nodes
+  rev_nodes <- xml_find_all(rev_xml, '//rev')
+
+  # Parse out usernames
+  user <- xml_attr(rev_nodes, "user")
+  
+  # Parse out timestamps
+  timestamp <- readr::parse_datetime(xml_attr(rev_nodes, "timestamp"))
+  
+  # Parse out content
+  content <- xml_text(rev_nodes)
+  
+  # Return data frame 
+  data.frame(user = user,
+    timestamp = timestamp,
+    content = substr(content, 1, 40))
+}
+
+# Call function for "Hadley Wickham"
+get_revision_history(article_title = "Hadley Wickham")
+```
+
+每个数据也是单独取出来，然后建立data frame。

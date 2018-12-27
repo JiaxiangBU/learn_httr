@@ -1,0 +1,41 @@
+---
+output: github_document
+---
+
+# web scraping
+
+不同于API，需要自己爬虫。
+
+rvest是主要负责爬虫的，但是实际上我需要知道 headers 这部分内容。
+
+但是这里会介绍 rvest 包的标准使用方法，也值得借鉴。
+
+```{r}
+# Load rvest
+library(rvest)
+
+# Hadley Wickham's Wikipedia page
+test_url <- "https://en.wikipedia.org/wiki/Hadley_Wickham"
+
+# Read the URL stored as "test_url" with read_html()
+test_xml <- read_html(test_url)
+
+# Print test_xml
+test_xml
+```
+
+熟悉的XML语言。
+
+```{r}
+test_node_xpath <- "//*[contains(concat( \" \", @class, \" \" ), concat( \" \", \"vcard\", \" \" ))]"
+```
+
+很复杂。
+
+```{r}
+node <- html_node(x = test_xml, xpath = test_node_xpath)
+node
+```
+
+书签
+https://campus.datacamp.com/courses/working-with-web-data-in-r/web-scraping-with-xpaths?ex=4
