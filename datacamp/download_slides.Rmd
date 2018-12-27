@@ -2,3 +2,9 @@ https://s3.amazonaws.com/assets.datacamp.com/production/course_3026/slides/chapt
 https://s3.amazonaws.com/assets.datacamp.com/production/course_3026/slides/chapter2.pdf
 https://s3.amazonaws.com/assets.datacamp.com/production/course_3026/slides/chapter3.pdf
 https://s3.amazonaws.com/assets.datacamp.com/production/course_3026/slides/chapter4.pdf
+https://s3.amazonaws.com/assets.datacamp.com/production/course_3026/slides/chapter5.pdf
+
+```{r eval=F}
+download.file(url = "https://s3.amazonaws.com/assets.datacamp.com/production/course_3026/slides/chapter5.pdf",destfile = "docs/chapter5.pdf")
+```
+

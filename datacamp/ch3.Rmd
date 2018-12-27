@@ -1,0 +1,72 @@
+---
+output: github_document
+---
+
+# JSON
+
+JSON 格式常用于 Web 的数据传输
+
+一般有两种格式，参考[DataCamp](https://campus.datacamp.com/courses/working-with-web-data-in-r/handling-json-and-xml?ex=1)
+
+1. objects: `{"title" : "A New Hope", "year" : "1977"}`
+1. arrays: `[1977, 1980]`
+
+`http_type`帮助知道反馈的值是不是json格式。
+
+```{r eval=F}
+> library(httr)
+> url <- "http://httpbin.org/get" > r <- GET(url)
+> http_type(r)
+[1] "application/json"
+```
+
+
+```{eval =F}
+[{ 
+   "first_name": "Jason",
+   "last_name": "Bourne",
+   "occupation": "Spy"
+ },
+{
+  "first_name": "Jason",
+  "last_name": "Voorhees",
+  "occupation": "Mass murderer"
+}]
+```
+
+1. 首先是一个array
+1. 其次含有两个jason (音译，参考[DataCamp](https://campus.datacamp.com/courses/working-with-web-data-in-r/handling-json-and-xml?ex=2))
+
+>
+`as = "text"` will return the content as a character string which is useful for checking the content is as you expect.
+
+```{eval=F}
+> writeLines(content(r, as = "text"))
+No encoding supplied: defaulting to UTF-8.
+{
+    "args": {}, 
+    "headers": {
+        "Accept": "application/json, text/xml, application/xml, */*", "Accept-Encoding": "gzip, deflate",
+        "Connection": "close",
+        "Host": "httpbin.org",
+        "User-Agent": "libcurl/7.54.0 r-curl/2.8.1 httr/1.2.1" 
+    },
+    "origin": "98.232.182.170",
+    "url": "http://httpbin.org/get" 
+}
+```
+
+
+```{r}
+fromJSON(content(resp_json, as = "text"))
+```
+
+# Manipulating JSON
+
+1. 主要使用 rlist, base, tidyverse 包
+1. 主要使用`fromJSON`函数解析 JSON 格式
+
+查询之前rlist的学习笔记
+
+书签
+https://campus.datacamp.com/courses/working-with-web-data-in-r/handling-json-and-xml?ex=5
