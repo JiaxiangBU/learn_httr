@@ -58,3 +58,18 @@ a - attr
 使用 `html_table`
 
 <input type="checkbox" id="checkbox1" class="styled">[等下拿GDP](https://baike.sogou.com/v6172.htm?fromTitle=gdp)
+
+```{r}
+library(rvest)
+gdp_html <- read_html("https://baike.sogou.com/v6172.htm?fromTitle=gdp")
+```
+
+```{r}
+gdp_html %>% 
+    html_node('table') %>% 
+    html_table(fill = T) %>% 
+    dplyr::select(1:2)
+```
+
+但是我觉得这个函数不太好用。
+可以close
