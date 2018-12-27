@@ -1,3 +1,8 @@
+### 2018-12-27 14:49:52
+
+1. finish ch4
+1. add ch5
+
 ### 2018-12-27 09:26:33
 
 1. add datacamp course

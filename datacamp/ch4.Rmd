@@ -37,5 +37,24 @@ node <- html_node(x = test_xml, xpath = test_node_xpath)
 node
 ```
 
-书签
-https://campus.datacamp.com/courses/working-with-web-data-in-r/web-scraping-with-xpaths?ex=4
+# HTML structure
+
+`<a href = "https://en.wikipedia.org/"> this is a test </a>`
+
+a - attr
+
+1. `html_text(x = ___)` - get text contents
+1. `html_attr(x = ___, name = ___)` - get specific attribute
+1. `html_name(x = ___)` - get tag name
+
+<input type="checkbox" id="checkbox1" class="styled">整合博客上的rvest
+
+可以从网络上提取`table`
+
+感觉如果是 `html_nodes` 这样的，含金量就不是很高了。
+
+# HTML table
+
+使用 `html_table`
+
+<input type="checkbox" id="checkbox1" class="styled">[等下拿GDP](https://baike.sogou.com/v6172.htm?fromTitle=gdp)
