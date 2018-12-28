@@ -1,6 +1,6 @@
 ### 2018-12-28 09:56:15
 
-1. add web scrapying
+1. add web scrapying in Python
 
 ### 2018-12-28 01:45:19
 
