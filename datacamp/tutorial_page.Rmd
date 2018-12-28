@@ -12,3 +12,8 @@ Charlotte Wickham and Oliver Keyes
 knitr::include_graphics("statement_of_accomplishment.pdf")
 ```
 
+<input type="checkbox" id="checkbox1" class="styled">整理下笔记，感觉有点囫囵吞枣
+
+<input type="checkbox" id="checkbox1" class="styled">建立 task table
+
+
