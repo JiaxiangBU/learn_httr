@@ -1,3 +1,16 @@
+### 2018-12-29 10:42:32
+
+1. add manzert
+
+### 2018-12-28 09:56:15
+
+1. add web scrapying in Python
+
+### 2018-12-28 01:45:19
+
+1. finish ch5
+1. add statement_of_accomplishment.pdf
+
 ### 2018-12-27 14:49:52
 
 1. add 

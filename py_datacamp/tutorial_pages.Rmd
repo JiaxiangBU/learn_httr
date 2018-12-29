@@ -1,0 +1,10 @@
+scrapy
+BeautifulSoup
+Selenium
+
+了解 Python 为什么成功也是技能之一。
+
+https://www.datacamp.com/courses/web-scraping-with-python
+Thomas Laetsch
+Web Scraping with Python
+
