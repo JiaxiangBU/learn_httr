@@ -1,0 +1,69 @@
+---
+output: github_document
+---
+
+http://www.r-datacollection.com/
+
+>
+HTTP messages, whether client requests or server response messages, consist of three parts: start line, headers, and body.
+pp.106
+
+>
+For example, request header fields can inform the server about the type of resources the client accepts as response, like restricting the responses to plain HTML documents or give details on the technical specification of the client, like the software that was used to request the document. They can also describe the content of the message, which might be plain text or binary, an image or audio file and might also have gone through encoding steps like compression. Header fields always follow the same, simple syntax. The name comes first and is separated with a colon from the value. Some header fields contain multiple values that are separated by comma.
+pp.109-110
+
+```html
+Accept: text/html,image/gif,image/*,*/*;q=0.8
+```
+
+>
+Accept is a request header feld that tells the server about the type of resources the client is willing to accept as response. If no resource fts the restrictions made in Accept, the server should send a 406 status code. The specifcation of accepted content follows the MIME type scheme. Types are separated by commas; semicolons are used to specify so-called accept parameters type/subtype;acceptparameter=value,type/.... The asterisk (*) can be used to specify ranges of type and subtypes. The rules of content-type preferences are as follows: (1) more specifc types are preferred over less specifc ones and (2) types are preferred in decreasing order of the q parameter while (3) all type specifcations have a default preference of q = 1 if not specifed otherwise.
+
+1. 要求指定反馈的文件类型
+1. `*`表示任意文件
+1. `q`默认为1，list应该按照`q`递减来写
+
+>
+The client accepts HTML and GIF but if neither is available will accept any other image type. If no other image type is available, the client will also accept any other type of content.
+
+```html
+Authorization: Basic cm9va2llOjEyM0lzTm90QVNlY3VyZVBX
+```
+
+```html
+Proxy-Authentication: Basic bWFnaWNpYW5zYXlzOmFicmFrYWRhYnI=
+```
+
+用户的账号密码
+按照`username:password`翻译成 base 64 的规则
+
+```html
+Cookie: sessionid=2783321; path=/; domain=r-datacollection.com;
+expires=Mon, 31-Dec-2035 23:00:01 GMT
+```
+
+<input type="checkbox" id="checkbox1" class="styled">看了目录，会讲sftp
+
+>
+Cookies are information sent from server to client with the `Set-Cookie` header feld. They allow identifying clients—without cookies servers would not know that they have had contact with a client before. The Cookie header feld returns the previously received information. The syntax of the header feld is simple: Cookies consist of `name=value` pairs that are separated from each other by semicolon. Names like expires, domain, path, and secure are reserved parameters that defne how the cookie should be handled by the client. expires defnes a date after which the cookie is no longer valid. If no expiration date is given the cookie is only valid for one session. domain and path specify for which resource requests the cookie is needed. secure is used to indicate that the cookie should only be sent over secured connections (SSL; see Section 5.3.1). We introduce cookies in greater detail in Section 5.2.1. The example reads as follows: The cookie sessionid=2783321 is valid until 31st of December 2035 for the domain www.r-datacollection.com and all its subdirectories (declared with /)
+
+1. `Set-Cookie`来表达cookie
+1. 使用`name=value`来表达
+1. `expires=Mon, 31-Dec-2035 23:00:01 GMT`表达了在什么时间，cookie失效
+1. `path=/; domain=r-datacollection.com;`表达那些路径会使用到这个cookie
+
+```
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+```
+
+这个任意设定，用于网站识别什么浏览器和什么系统。
+
+<input type="checkbox" id="checkbox1" class="styled">5.4.4 Maintaining connections across multiple requests
+
+<input type="checkbox" id="checkbox1" class="styled">AJAX
+
+<input type="checkbox" id="checkbox1" class="styled">Gathering data on mobile phone
+可以做产品测试
+
+这本书，非常实用。
+
