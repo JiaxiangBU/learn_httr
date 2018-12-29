@@ -1,0 +1,11 @@
+---
+output: github_document
+---
+
+>
+HTTP messages, whether client requests or server response messages, consist of three parts: start line, headers, and body.
+pp.106
+
+>
+For example, request header fields can inform the server about the type of resources the client accepts as response, like restricting the responses to plain HTML documents or give details on the technical specification of the client, like the software that was used to request the document. They can also describe the content of the message, which might be plain text or binary, an image or audio file and might also have gone through encoding steps like compression. Header fields always follow the same, simple syntax. The name comes first and is separated with a colon from the value. Some header fields contain multiple values that are separated by comma.
+pp.109-110
